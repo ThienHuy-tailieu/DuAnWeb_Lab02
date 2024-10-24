@@ -41,53 +41,85 @@ public class ProductManagement extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HoaDAO hoaDAO = new HoaDAO();
-        LoaiDAO loaiDAO=new LoaiDAO();
-        
-        String action ="list";
-        if(request.getParameter("action")!=null)
-        {
+        LoaiDAO loaiDAO = new LoaiDAO();
+
+        String action = "list";
+        if (request.getParameter("action") != null) {
             action = request.getParameter("action");
         }
         switch (action) {
             case "list":
-                ArrayList<Hoa> dsHoa= hoaDAO.getAll();
+                ArrayList<Hoa> dsHoa = hoaDAO.getAll();
                 request.setAttribute("dsHoa", dsHoa);
                 request.getRequestDispatcher("admin/list_product.jsp").forward(request, response);
                 break;
             case "add":
-                if(request.getMethod().equalsIgnoreCase("get")){
-                    request.setAttribute("dsLoai",loaiDAO.getAll());
+                if (request.getMethod().equalsIgnoreCase("get")) {
+                    request.setAttribute("dsLoai", loaiDAO.getAll());
                     request.getRequestDispatcher("admin/add_product.jsp").forward(request, response);
-                }else if(request.getMethod().equalsIgnoreCase("post")){
-                    String tenhoa=request.getParameter("tenhoa");
-                    double gia=Double.parseDouble(request.getParameter("gia"));
-                    Part part=request.getPart("hinh");
-                    int maloai=Integer.parseInt(request.getParameter("maloai"));
-                    
-                    String realPath=request.getServletContext().getRealPath("/assets/images/products");
-                    String filename=Paths.get(part.getSubmittedFileName()).getFileName().toString();
-                    part.write(realPath+"/"+filename);
-                    
-                    Hoa objInsert=new Hoa(0,tenhoa,gia,filename,maloai,new Date(new java.util.Date().getTime()));
-                    if(hoaDAO.Insert(objInsert)){
-                        request.setAttribute("success","Thêm sản phẩm thành công");
-                    }else{
-                        request.setAttribute("error","Thêm sản phẩm thất bại");
+                } else if (request.getMethod().equalsIgnoreCase("post")) {
+                    String tenhoa = request.getParameter("tenhoa");
+                    double gia = Double.parseDouble(request.getParameter("gia"));
+                    Part part = request.getPart("hinh");
+                    int maloai = Integer.parseInt(request.getParameter("maloai"));
+
+                    String realPath = request.getServletContext().getRealPath("/assets/images/products");
+                    String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                    part.write(realPath + "/" + filename);
+
+                    Hoa objInsert = new Hoa(0, tenhoa, gia, filename, maloai, new Date(new java.util.Date().getTime()));
+                    if (hoaDAO.Insert(objInsert)) {
+                        request.setAttribute("success", "Thêm sản phẩm thành công");
+                    } else {
+                        request.setAttribute("error", "Thêm sản phẩm thất bại");
                     }
                     request.getRequestDispatcher("ProductManagement?action=list").forward(request, response);
                 }
                 break;
             case "edit":
-                System.out.println("edit");
+                if (request.getMethod().equalsIgnoreCase("get")) {
+                    int mahoa=Integer.parseInt(request.getParameter("mahoa"));
+                    request.setAttribute("hoa", hoaDAO.getById(mahoa));
+                    request.setAttribute("dsLoai", loaiDAO.getAll());
+                    request.getRequestDispatcher("admin/edit_product.jsp").forward(request, response);
+                    
+                } else if (request.getMethod().equalsIgnoreCase("post")) {
+                    
+                    int mahoa=Integer.parseInt(request.getParameter("mahoa"));
+                    String tenhoa = request.getParameter("tenhoa");
+                    double gia = Double.parseDouble(request.getParameter("gia"));
+                    Part part = request.getPart("hinh");
+                    int maloai = Integer.parseInt(request.getParameter("maloai"));
+                    String filename=request.getParameter("oldImg");
+                    
+                    if(part.getSize()>0){
+                        String realPath = request.getServletContext().getRealPath("/assets/images/products");
+                    filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                    part.write(realPath + "/" + filename);
+                    }       
+                    
+                    Hoa objUpdate = new Hoa(0, tenhoa, gia, filename, maloai, new Date(new java.util.Date().getTime()));
+                    if (hoaDAO.Update(objUpdate)) {
+                        request.setAttribute("success", "Thêm sản phẩm thành công");
+                    } else {
+                        request.setAttribute("error", "Thêm sản phẩm thất bại");
+                    }
+                    request.getRequestDispatcher("ProductManagement?action=list").forward(request, response);
+                }
                 break;
             case "delete":
-                System.out.println("delete");
-                break;
-                
-        
-        
+                int mahoa = Integer.parseInt(request.getParameter("mahoa"));
+
+                if (hoaDAO.Delete(mahoa)) {
+                    request.setAttribute("success", "Xóa sản phẩm thành công");
+                } else {
+                    request.setAttribute("error", "Xóa sản phẩm thất bại");
+                }
+                request.getRequestDispatcher("ProductManagement?action=list").forward(request, response);
+            break;
+
         }
     }
 

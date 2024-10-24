@@ -13,6 +13,22 @@
 <jsp:include page="../shared/nav.jsp" />
 
 
+<%
+    if(request.getAttribute("success")!=null){
+%>
+<script >
+    alert("<%=request.getAttribute("success")%>");
+</script>
+<%}%>
+
+<%
+    if(request.getAttribute("error")!=null){
+%>
+<script >
+    alert("<%=request.getAttribute("error")%>");
+</script>
+<%}%>
+
 <div class="container">
     <h2> Danh sách sản phẩm</h2>
     <div class="mb-2 text-end">
