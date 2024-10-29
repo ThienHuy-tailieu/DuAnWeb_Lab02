@@ -72,6 +72,24 @@ public class HoaDAO {
         return ds;
     }
 
+    public ArrayList<Hoa> getByPage(int pageIndex,int pageSize) {
+        ArrayList<Hoa> ds = new ArrayList<>();
+        String sql = "select * from Hoa order by mahoa OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        conn = DbContext.getConnection();
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1,(pageIndex-1)* pageSize);
+            ps.setInt(2, pageSize);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ds.add(new Hoa(rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getString(4), rs.getInt(5), rs.getDate(6)));
+            }
+        } catch (Exception ex) {
+            System.out.println("Loi:" + ex.toString());
+        }
+        return ds;
+    }
+    
     //phuong thuc them mới sản phẩm (Hoa)
     public boolean Insert(Hoa hoa) {
         String sql = "insert into hoa (tenhoa,gia,hinh,maloai,ngaycapnhat) values (?,?,?,?,?)";
@@ -153,7 +171,8 @@ public class HoaDAO {
     public static void main(String[] args) {
         HoaDAO hoaDao = new HoaDAO();
         System.out.println("Lay tat ca hoa");
-        ArrayList<Hoa> dsHoa = hoaDao.getAll();
+        int pageSize=5;
+        ArrayList<Hoa> dsHoa = hoaDao.getByPage(2, pageSize);
         for (Hoa hoa : dsHoa) {
             System.out.println(hoa);
         }

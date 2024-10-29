@@ -9,12 +9,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <jsp:include page="../shared/header.jsp" />
-             
+
 <jsp:include page="../shared/nav.jsp" />
 
 
 <%
-    if(request.getAttribute("success")!=null){
+    if (request.getAttribute("success") != null) {
 %>
 <script >
     alert("<%=request.getAttribute("success")%>");
@@ -22,7 +22,7 @@
 <%}%>
 
 <%
-    if(request.getAttribute("error")!=null){
+    if (request.getAttribute("error") != null) {
 %>
 <script >
     alert("<%=request.getAttribute("error")%>");
@@ -34,7 +34,7 @@
     <div class="mb-2 text-end">
         <a href="ProductManagement?action=add" class="btn btn-success"> <i class="bi bi-plus-circle"></i> Thêm mới</a>
     </div>
-    
+
     <table class="table table-bordered table-striped">
         <tr>
             <th>Tên hoa</th>
@@ -44,24 +44,38 @@
             <th>Action</th>
         </tr>  
         <%
-            ArrayList<Hoa> dsHoa = (ArrayList<Hoa>)request.getAttribute("dsHoa");
-            for (Hoa x: dsHoa)
-            {
+            ArrayList<Hoa> dsHoa = (ArrayList<Hoa>) request.getAttribute("dsHoa");
+            for (Hoa x : dsHoa) {
         %>
         <tr>
-            <td><%=x.getTenhoa() %></td>
+            <td><%=x.getTenhoa()%></td>
             <td><%=x.getGia()%></td>
             <td> <img src="assets/images/products/<%=x.getHinh()%>" style="width: 100px">  </td>
             <td><%=x.getMaloai()%></td>
             <td>
-                 <a href="ProductManagement?action=edit&mahoa=<%=x.getMahoa()%>" class="btn btn-secondary"> <i class="bi bi-pencil-square"></i> Sửa</a>
-                 <a href="ProductManagement?action=delete&mahoa=<%=x.getMahoa()%>" class="btn btn-danger"> <i class="bi bi-trash"></i> Xoá</a>
+                <a href="ProductManagement?action=edit&mahoa=<%=x.getMahoa()%>" class="btn btn-secondary"> <i class="bi bi-pencil-square"></i> Sửa</a>
+                <a href="ProductManagement?action=delete&mahoa=<%=x.getMahoa()%>" class="btn btn-danger"> <i class="bi bi-trash"></i> Xoá</a>
             </td>
         </tr>     
         <%
             }
         %>
     </table>
+    <div>
+        <ul class="pagination justify-content-center">
+            <%
+                int pageSum = (int) request.getAttribute("pageSum");
+                int pageIndex = (int) request.getAttribute("pageIndex");
+                for (int i = 1; i <= pageSum; i++) {
+            %>
+            <li class="page-item"<%=pageIndex==i?"active":""%>>
+                <a href="ProductManagement?page=<%=i%>"class="page-link"><%=i%></a>
+            </li>
+            <%
+                }
+            %>
+        </ul>
+    </div>    
 </div>
 
 
