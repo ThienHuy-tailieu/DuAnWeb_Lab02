@@ -1,6 +1,6 @@
 <%@page pageEncoding="UTF-8" %>
 <footer class="container">
-            <strong>&copy; 2024 - Họ tên sinh viên - Mã số sinh viên </strong>
+            <strong>&copy; 2024 - Bùi Thiên Huy - 2321160013 </strong>
         </footer>
 
         <!-- Optional JavaScript -->
