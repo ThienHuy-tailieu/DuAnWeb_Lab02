@@ -9,7 +9,7 @@
 <jsp:include page="shared/header.jsp" />
 <!--nhung noi dung nav.jsp-->
 <jsp:include page="shared/nav.jsp" />
-<div>
+<div class="container">
     <form action="LoginServlet" method="POST">
         <h2>Login System</h2>
         <div>
